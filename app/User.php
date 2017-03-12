@@ -28,4 +28,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'encrypted_password', 
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany('Role', 'roles');
+    }
+
+    public function isAdmin()
+    {
+        $roles = $this->roles->role == 'admin';
+        return $roles;
+    }
 }
