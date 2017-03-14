@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 
-class Challenges extends Model implements Eloquent
+class Challenges extends Model
 {
     use Authenticatable, Authorizable;
     /**

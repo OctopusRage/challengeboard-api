@@ -20,10 +20,7 @@ $app->group(['prefix'=>'users'], function () use ($app) {
 });
 
 $app->group(['prefix' => 'admin'], function () use ($app) {
-    $app->get('users', function ()    {
-        return 'asu';
-    });
    $app->post('challenges', 'ChallengesController@create');
 });
 
-$app->get('/test', 'SessionsController@create');
+$app->post('/login', 'SessionsController@create');

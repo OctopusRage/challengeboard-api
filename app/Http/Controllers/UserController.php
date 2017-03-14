@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
 class UserController extends Controller
 {
+  const USER_TYPE_TEACHER = 1;
+  const USER_TYPE_STUDENT = 2;
+
   public function create(Request $request) {
       $v = Validator::make($request->all(), [
           'name' => 'required|min:6|max:255',
           'password' => 'required',
           'password_confirmation' => 'same:password',
-          'nim' => 'required|unique:users|min:6'
+          'nim' => 'required|unique:users|min:6',
+          'type' => 'required'
       ]);
 
       if ($v->fails()){
@@ -28,6 +33,23 @@ class UserController extends Controller
       $user->name = $request->input('name');
       $user->encrypted_password = Hash::make($request->input('password'));
       $user->auth_token = str_random(20);
+      $role = null;
+      if ($request->type == self::USER_TYPE_TEACHER) {
+        $role = Role::where('role', '=', 'teacher')->first();
+      } elseif($request == self::USER_TYPE_STUDENT) {
+        $role = Role::where('role', '=', 'student')->first();
+      }
+
+      if ($role == null ||$role->count()<1 ) {
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+            'role' => 'role does not exist'
+          ]
+        ], 422);  
+      }
+
+      $user->role_id = $role->id;
       
       if ($user->save()) {
         return response()->json($user);
@@ -36,5 +58,4 @@ class UserController extends Controller
           ['error' => 'Unauthorized'], 401);
       }
   }
-
 }

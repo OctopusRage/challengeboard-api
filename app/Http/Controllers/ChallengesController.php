@@ -8,6 +8,10 @@ use Validator;
 
 class ChallengesController extends Controller
 {
+  public function __construct() {
+    $this->middleware('auth');
+  }
+
   public function create(Request $request) {
       $user = Auth::user();
       if (!$user->isAdmin()){
