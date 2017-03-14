@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Challenges extends Model
+class Challenge extends Model
 {
-    use Authenticatable, Authorizable;
     /**
      * The attributes that are mass assignable.
      *

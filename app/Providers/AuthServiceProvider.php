@@ -34,9 +34,9 @@ class AuthServiceProvider extends ServiceProvider
         
         
         $this->app['auth']->viaRequest('api', function ($request) {
-            $header = $request->input('apitoken');
-            if ($header && $header == 'ajitirta') {
-                return new User();
+            $header = $request->header('apitoken');
+            if ($header) {
+                return User::where('auth_token', $header)->first();
             }
             return null;
             /*if ($request->input('api_token')) {

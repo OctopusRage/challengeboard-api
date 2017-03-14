@@ -23,6 +23,14 @@ class SessionsController extends Controller
       }
 
       $user = User::where('nim', '=', $request->nim)->first();
+      if(empty($user)) {
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+              'user' => 'not found'
+          ]
+        ]);
+      }
       if (!Hash::check($request->password, $user->encrypted_password)) {
         return response()->json([
           'status' => 'fail',

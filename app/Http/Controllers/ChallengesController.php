@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use Auth;
 use Illuminate\Http\Request;
-use App\Challenges;
+use App\Models\Challenge;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
@@ -14,7 +15,7 @@ class ChallengesController extends Controller
 
   public function create(Request $request) {
       $user = Auth::user();
-      if (!$user->isAdmin()){
+      if ($user->isStudent()){
         return response()->json([
           'status' => 'fail',
           'errors' => 'unauthorized access'
@@ -29,9 +30,9 @@ class ChallengesController extends Controller
           'enroll_limit' => 'required|date',
           'status' => 'boolean',
       ]);
-      
-      if (!isset($request->status)) {
-        $request->status = true;
+      $status = true;
+      if ($request->input('status')) {
+        $status = $request->input('status');
       }
 
       if ($v->fails()){
@@ -41,13 +42,13 @@ class ChallengesController extends Controller
         ], 422);
       }
 
-      $challenges = new User;
-      $challenges->title = $request-> input('title');
-      $challenges->event_date = $request-> input('event_date');
+      $challenges = new Challenge;
+      $challenges->title = $request->input('title');
+      $challenges->event_date = $request->input('event_date');
       $challenges->prize = $request->input('prize');
       $challenges->description = $request->input('description');
-      $challenges->enroll_limit = $request->input('enroll_limit');
-      $challenges->status = $request->input('status');
+      $challenges->enroll_limit_date = $request->input('enroll_limit');
+      $challenges->status = $status;
       
       if ($challenges->save()) {
         return response()->json($challenges);

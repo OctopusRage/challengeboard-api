@@ -29,26 +29,26 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'encrypted_password', 
     ];
 
-    public function roles()
+    public function role()
     {
-        return $this->belongsToMany('Role', 'roles');
+        return $this->belongsTo('App\Models\Role');
     }
 
     public function isAdmin()
     {
-        $roles = $this->roles->role == 'admin';
-        return $roles;
+        $role = $this->role->role == 'admin';
+        return $role;
     }
 
     public function isTeacher()
     {
-        $roles = $this->roles->role == 'teacher';
-        return $roles;
+        $role = $this->role->role == 'teacher';
+        return $role;
     }
 
     public function isStudent()
     {
-        $roles = $this->roles->role == 'student';
-        return $roles;
+        $role = $this->role->role == 'student';
+        return $role;
     }
 }
