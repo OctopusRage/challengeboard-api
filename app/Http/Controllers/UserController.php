@@ -52,7 +52,10 @@ class UserController extends Controller
       $user->role_id = $role->id;
       
       if ($user->save()) {
-        return response()->json($user);
+        return response()->json([
+          'status' => 'success',
+          'user' => $user
+        ], 200);
       } else {
         return response()->json(
           ['error' => 'Unauthorized'], 401);

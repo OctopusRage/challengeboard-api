@@ -40,10 +40,10 @@ class SessionsController extends Controller
         ], 422);
       }
       return response()->json([ 
-          'status' => 'success', 
-          'data' => [
-              'users' => $user
-          ]
+        'status' => 'success', 
+        'data' => [
+            'users' => $user
+        ]
       ]);
     }
 

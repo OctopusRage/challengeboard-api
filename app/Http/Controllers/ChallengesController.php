@@ -51,7 +51,10 @@ class ChallengesController extends Controller
       $challenges->status = $status;
       
       if ($challenges->save()) {
-        return response()->json($challenges);
+        return response()->json([
+          'status' => 'success',
+          'user' => $user
+        ], 200);
       } else {
         return response()->json(
           ['error' => 'Unauthorized'], 401);
