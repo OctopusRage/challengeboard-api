@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Challenge;
+use App\Models\ChallengesParticipant;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
 class ChallengesController extends Controller
 {
   public function __construct() {
-    $this->middleware('auth', ['only' => ['create']]);
+    $this->middleware('auth', ['only' => ['create', 'join']]);
   }
 
   public function create(Request $request) {
@@ -83,6 +84,60 @@ class ChallengesController extends Controller
           'current_page'=> $challenges->currentPage(),
         ]
       ], 200);
+  }
+
+  public function join($id) {
+      $user = Auth::user();
+      if (!$user->isStudent()){
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+            'user_type' => 'must be student'
+          ]
+        ], 401);
+      }
+
+      $challenges = Challenge::find($id);
+      if (empty($challenges)) {
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+            'challenges' => 'not found'
+          ]
+        ], 422);
+      }
+
+      $isRegistered = ChallengesParticipant::whereRaw("challenges_id = ".$id." AND users_id = ".$user->id)->first();
+      if (!empty($isRegistered)) {
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+            'join_challenge' => 'participant already registered',
+            'status' => ($isRegistered->statuts==1 ? "accepted":"waiting confirmation")
+          ]
+        ], 422);
+      }
+
+      $join_challenge = new ChallengesParticipant;
+      $join_challenge->users_id = $user->id;
+      $join_challenge->challenges_id = $id;
+
+      if ($join_challenge->save()) {
+        return response()->json([
+          'status' => 'success',
+          'data' => [
+            'challenges_participants' => $join_challenge,
+          ]
+        ], 201);
+      } else {
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+            'messages' => 'fail to save data'
+          ]
+        ], 500);
+      }
+      
   }
 
 }

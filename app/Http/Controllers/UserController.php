@@ -34,9 +34,9 @@ class UserController extends Controller
       $user->encrypted_password = Hash::make($request->input('password'));
       $user->auth_token = str_random(20);
       $role = null;
-      if ($request->type == self::USER_TYPE_TEACHER) {
+      if ($request->input('type') == self::USER_TYPE_TEACHER) {
         $role = Role::where('role', '=', 'teacher')->first();
-      } elseif($request == self::USER_TYPE_STUDENT) {
+      } elseif($request->input('type') == self::USER_TYPE_STUDENT) {
         $role = Role::where('role', '=', 'student')->first();
       }
 
