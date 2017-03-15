@@ -15,4 +15,7 @@ class Challenge extends Model
     protected $fillable = [
         'title', 'prize', 'event_date', 'enroll_limit_date', 'picture', 'prize', 'description', 'status'
     ];
+    public function participants(){
+        return $this->belongsToMany('App\User', 'App\Models\ChallengesParticipant');
+    }
 }
