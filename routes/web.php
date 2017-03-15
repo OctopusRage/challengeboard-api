@@ -23,4 +23,8 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
    $app->post('challenges', 'ChallengesController@create');
 });
 
+$app->group(['prefix' => 'challenges'], function () use ($app) {
+   $app->get('/', 'ChallengesController@index');
+});
+
 $app->post('/login', 'SessionsController@create');

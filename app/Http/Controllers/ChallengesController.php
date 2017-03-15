@@ -10,7 +10,7 @@ use Validator;
 class ChallengesController extends Controller
 {
   public function __construct() {
-    $this->middleware('auth');
+    $this->middleware('auth', ['only' => ['create']]);
   }
 
   public function create(Request $request) {
@@ -59,6 +59,32 @@ class ChallengesController extends Controller
         return response()->json(
           ['error' => 'Unauthorized'], 401);
       }
+  }
+
+  public function index(Request $request) {
+      $user = Auth::user();
+      $v = Validator::make($request->all(), [
+          'page' => 'integer',
+      ]);
+      $page = 20;
+      if ($request->input('page')) {
+        $status = $request->input('page');
+      }
+
+      if ($v->fails()){
+        return response()->json([
+          'status' => 'fail',
+          'errors' => $v->errors()
+        ], 422);
+      }
+
+      $challenges = Challenge::paginate($page);
+      return response()->json([
+        'status' => 'success',
+        'data' => [
+          'challenges' => $challenges
+        ]
+      ], 200);
   }
 
 }
