@@ -32,3 +32,4 @@ $app->group(['prefix' => 'challenges'], function () use ($app) {
 });
 
 $app->post('/login', 'SessionsController@create');
+$app->get('/test/{id}', 'TeacherController@pending_request');

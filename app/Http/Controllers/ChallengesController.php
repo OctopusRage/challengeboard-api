@@ -5,6 +5,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Models\Challenge;
 use App\Models\ChallengesParticipant;
+use App\Models\ChallengesTeacher;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
@@ -52,6 +53,10 @@ class ChallengesController extends Controller
       $challenges->status = $status;
       
       if ($challenges->save()) {
+        $challenges_teacher = new ChallengesTeacher;
+        $challenges_teacher->user_id = $user->id;
+        $challenges_teacher->challenge_id = $challenges->id;
+        $challenges_teacher->save();
         return response()->json([
           'status' => 'success',
           'user' => $challenges,
@@ -107,7 +112,7 @@ class ChallengesController extends Controller
         ], 422);
       }
 
-      $isRegistered = ChallengesParticipant::whereRaw("challenges_id = ".$id." AND users_id = ".$user->id)->first();
+      $isRegistered = ChallengesParticipant::whereRaw("challenge_id = ".$id." AND user_id = ".$user->id)->first();
       if (!empty($isRegistered)) {
         return response()->json([
           'status' => 'fail',
@@ -119,8 +124,8 @@ class ChallengesController extends Controller
       }
 
       $join_challenge = new ChallengesParticipant;
-      $join_challenge->users_id = $user->id;
-      $join_challenge->challenges_id = $id;
+      $join_challenge->user_id = $user->id;
+      $join_challenge->challenge_id = $id;
 
       if ($join_challenge->save()) {
         return response()->json([

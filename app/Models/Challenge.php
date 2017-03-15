@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Model;
-
+use App\User;
 
 class Challenge extends Model
 {
@@ -15,7 +15,14 @@ class Challenge extends Model
     protected $fillable = [
         'title', 'prize', 'event_date', 'enroll_limit_date', 'picture', 'prize', 'description', 'status'
     ];
+
     public function participants(){
-        return $this->belongsToMany('App\User', 'App\Models\ChallengesParticipant');
+        return $this->belongsToMany('App\User', 'challenges_participants');
     }
+
+    public function teachers(){
+        return $this->belongsToMany('App\User', 'challenges_teachers');
+    }
+
+
 }
