@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Hash;
 use Validator;
 class SessionsController extends Controller
 {
-    
-
     public function create(Request $request) {
         $v = Validator::make($request->all(), [
           'nim' => 'required',
