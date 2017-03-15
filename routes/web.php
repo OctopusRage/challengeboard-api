@@ -20,11 +20,15 @@ $app->group(['prefix'=>'users'], function () use ($app) {
 });
 
 $app->group(['prefix' => 'admin'], function () use ($app) {
-   $app->post('challenges', 'ChallengesController@create');
+    $app->group(['prefix' => 'challenges'], function () use ($app) {
+       $app->post('/', 'ChallengesController@create');
+       $app->post('/confirm_request/{id}', 'ChallengesController@create');
+    }); 
 });
 
 $app->group(['prefix' => 'challenges'], function () use ($app) {
-   $app->get('/', 'ChallengesController@index');
+    $app->get('/', 'ChallengesController@index');
+    $app->post('/join/{id}', 'ChallengesController@join');
 });
 
 $app->post('/login', 'SessionsController@create');

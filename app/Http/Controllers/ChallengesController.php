@@ -53,7 +53,7 @@ class ChallengesController extends Controller
       if ($challenges->save()) {
         return response()->json([
           'status' => 'success',
-          'user' => $user
+          'user' => $challenges,
         ], 200);
       } else {
         return response()->json(
@@ -64,12 +64,8 @@ class ChallengesController extends Controller
   public function index(Request $request) {
       $user = Auth::user();
       $v = Validator::make($request->all(), [
-          'page' => 'integer',
+          'limit' => 'integer',
       ]);
-      $page = 20;
-      if ($request->input('page')) {
-        $status = $request->input('page');
-      }
 
       if ($v->fails()){
         return response()->json([
@@ -77,12 +73,14 @@ class ChallengesController extends Controller
           'errors' => $v->errors()
         ], 422);
       }
-
-      $challenges = Challenge::paginate($page);
+      $limit = $request->input('limit') ?: 20 ;
+      $challenges = Challenge::paginate($limit);
       return response()->json([
         'status' => 'success',
         'data' => [
-          'challenges' => $challenges
+          'challenges' => $challenges->toArray()['data'],
+          'total' => $challenges->count(),
+          'current_page'=> $challenges->currentPage(),
         ]
       ], 200);
   }
