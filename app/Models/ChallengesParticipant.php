@@ -15,4 +15,8 @@ class ChallengesParticipant extends Model
     protected $fillable = [
         'users_id', 'challenges_id', 'status'
     ];
+
+    public function user() {
+        $this->belongsTo('App\User')
+    }
 }

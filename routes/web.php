@@ -23,6 +23,9 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
     $app->group(['prefix' => 'challenges'], function () use ($app) {
        $app->post('/', 'ChallengesController@create');
        $app->post('/confirm_request/{id}', 'ChallengesController@create');
+       $app->get('/pending_request', 'TeacherController@pending_request');
+       $app->get('/pending_request/{id}', 'TeacherController@pending_request_by_id');
+
     }); 
 });
 
@@ -32,4 +35,3 @@ $app->group(['prefix' => 'challenges'], function () use ($app) {
 });
 
 $app->post('/login', 'SessionsController@create');
-$app->get('/test/{id}', 'TeacherController@pending_request');

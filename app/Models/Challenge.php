@@ -17,7 +17,7 @@ class Challenge extends Model
     ];
 
     public function participants(){
-        return $this->belongsToMany('App\User', 'challenges_participants');
+        return $this->belongsToMany('App\User', 'challenges_participants')->withPivot('status');
     }
 
     public function teachers(){

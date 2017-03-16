@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ChallengesTeacher extends Pivot
+class ChallengesTeacher extends Model
 {
     /**
      * The attributes that are mass assignable.
