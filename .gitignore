@@ -1,4 +1,5 @@
 /vendor
+/storage/uploaded_subjects
 /.idea
 Homestead.json
 Homestead.yaml
