@@ -27,6 +27,10 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
        $app->get('/pending_request/{id}', 'TeacherController@pending_request_by_id');
        $app->post('/approve_request/{id}', 'TeacherController@approve_request');
     }); 
+    $app->group(['prefix' => 'subjects'], function () use ($app) {
+       $app->post('/', 'SubjectController@create');
+       $app->get('/{id}', 'SubjectController@get');
+    });
 });
 
 $app->group(['prefix' => 'challenges'], function () use ($app) {
