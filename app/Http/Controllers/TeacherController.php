@@ -76,4 +76,53 @@ class TeacherController extends Controller
       ]
     ]);
   }
+
+  public function approve_request($id) {
+    $current_user = Auth::user();
+    if($current_user->isStudent()) {
+      return response()->json([
+        'status' => 'fail',
+        'data' => [
+          'messages' => 'unauthorized access'
+        ]
+      ], 401);
+    }
+
+    $participant = ChallengesParticipant::find($id);
+    if (empty($participant)) {
+      return response()->json([
+        'status' => 'fail',
+        'data' => [
+          'participant' => 'not found'
+        ]
+      ], 401);
+    }
+    $challenge_teacher = ChallengesTeacher::where('user_id', '=', $current_user->id)->where('challenge_id', '=', $participant->challenge_id)->first();
+    if (empty($challenge_teacher)){ 
+      return response()->json([
+        'status' => 'fail',
+        'data' => [
+          'challenges' => 'doesnt belong to this teacher'
+        ]
+      ], 401);
+    }
+
+    $participant->status = true;
+    if($participant->save()) {
+      return response()->json([
+        'status' => 'success', 
+        'data' => [
+          'participant' => $participant
+        ]
+      ]);
+    } else  {
+      return response()->json([
+        'status' => 'fail',
+        'data' => [
+          'messages' => 'confirm request error'
+        ]
+      ], 500);
+    }
+    
+  }
 }
