@@ -31,6 +31,10 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
        $app->post('/', 'SubjectController@create');
        $app->get('/{id}', 'SubjectController@get');
     });
+    $app->group(['prefix' => 'schedules'], function () use ($app) {
+       $app->post('/', 'ScheduleController@create');
+       $app->get('/{id}', 'ScheduleController@get');
+    });
 });
 
 $app->group(['prefix' => 'challenges'], function () use ($app) {
