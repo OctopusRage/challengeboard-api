@@ -35,11 +35,19 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
        $app->post('/', 'ScheduleController@create');
        $app->get('/{id}', 'ScheduleController@get');
     });
+    $app->group(['prefix' => 'trophies'], function () use ($app) {
+       $app->post('/', 'TrophyController@create');
+    });
 });
 
 $app->group(['prefix' => 'challenges'], function () use ($app) {
     $app->get('/', 'ChallengesController@index');
     $app->post('/join/{id}', 'ChallengesController@join');
+});
+
+$app->group(['prefix' => 'trophies'], function () use ($app) {
+    $app->get('/', 'TrophyController@get');
+    $app->get('/{id}', 'TrophyController@get_by_id');
 });
 
 $app->post('/login', 'SessionsController@create');
