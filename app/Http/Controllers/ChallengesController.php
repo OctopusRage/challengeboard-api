@@ -7,6 +7,7 @@ use App\Models\Challenge;
 use App\Models\ChallengesParticipant;
 use App\Models\ChallengesTeacher;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Validator;
 
 class ChallengesController extends Controller
@@ -80,7 +81,11 @@ class ChallengesController extends Controller
         ], 422);
       }
       $limit = $request->input('limit') ?: 20 ;
-      $challenges = Challenge::paginate($limit);
+      $challenges = Challenge::select(DB::raw('challenges.*, count(challenges_participants.id) as participant_count'))
+        ->leftJoin('challenges_participants', 'challenges.id', '=', 'challenges_participants.challenge_id')
+        ->groupBy('challenges.id')
+        ->paginate($limit);
+
       return response()->json([
         'status' => 'success',
         'data' => [
