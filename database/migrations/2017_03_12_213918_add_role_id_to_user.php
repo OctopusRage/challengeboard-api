@@ -28,7 +28,6 @@ class AddRoleIdToUser extends Migration
     {
         Schema::table('users', function($table) {
             $table->dropColumn('role_id');
-            $table->dropIndex('role_id');
         });
     }
 }

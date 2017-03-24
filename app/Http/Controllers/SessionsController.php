@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Validator;
+use Storage;
 class SessionsController extends Controller
 {
     public function create(Request $request) {
@@ -25,7 +26,7 @@ class SessionsController extends Controller
         return response()->json([
           'status' => 'fail',
           'errors' => [
-              'user' => 'not found'
+            'messages' => 'user not found'
           ]
         ]);
       }
@@ -33,7 +34,7 @@ class SessionsController extends Controller
         return response()->json([
           'status' => 'fail',
           'errors' => [
-              'password' => 'invalid password'
+            'messages' => 'invalid password'
           ]
         ], 422);
       }
@@ -44,6 +45,4 @@ class SessionsController extends Controller
         ]
       ]);
     }
-
-    //
 }

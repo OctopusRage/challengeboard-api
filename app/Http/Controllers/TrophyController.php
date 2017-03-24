@@ -21,7 +21,9 @@ class TrophyController extends Controller
     if ($current_user->isStudent()){
       return response()->json([
         'status' => 'fail',
-        'errors' => 'unauthorized access'
+        'errors' => [
+          'messages' => 'unauthorized access'
+        ]
       ], 401);
     }
     
@@ -41,7 +43,7 @@ class TrophyController extends Controller
       return response()->json([
         'status'=> 'fail',
         'errors'=> [
-          'challenge'=> 'challenge not found'
+          'messages'=> 'challenge not found'
         ]
       ]);
     }
@@ -49,7 +51,7 @@ class TrophyController extends Controller
     if (empty($teacher) && $current_user->isTeacher()) {
       return response()->json([
         'status' => 'fail',
-        'data' => [
+        'errors' => [
           'messages' => 'unauthorized access'
         ]
       ], 401);
@@ -79,8 +81,10 @@ class TrophyController extends Controller
     }
     return response()->json([
         'status' => 'fail',
-        'errors' => $trophy->errors()
-      ], 422);
+        'errors' => [
+          'messages' => 'Internal server errors'
+        ]
+      ], 500);
   }
 
   public function get_by_id($id){

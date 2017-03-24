@@ -12,7 +12,7 @@ use Validator;
 class TeacherController extends Controller
 {
   public function __construct() {
-    $this->middleware('auth', ['only' => ['pending_request']]);
+    $this->middleware('auth', ['only' => ['pending_request','approve_request']]);
   }
 
   public function pending_request() {
@@ -52,7 +52,7 @@ class TeacherController extends Controller
     if($current_user->isStudent()) {
       return response()->json([
         'status' => 'fail',
-        'data' => [
+        'errors' => [
           'messages' => 'unauthorized access'
         ]
       ], 401);
@@ -62,7 +62,7 @@ class TeacherController extends Controller
     if(empty($teacher)) {
       return response()->json([
         'status' => 'fail',
-        'data' => [
+        'errors' => [
           'messages' => 'unauthorized access'
         ]
       ], 401);
@@ -82,7 +82,7 @@ class TeacherController extends Controller
     if($current_user->isStudent()) {
       return response()->json([
         'status' => 'fail',
-        'data' => [
+        'errors' => [
           'messages' => 'unauthorized access'
         ]
       ], 401);
@@ -92,7 +92,7 @@ class TeacherController extends Controller
     if (empty($participant)) {
       return response()->json([
         'status' => 'fail',
-        'data' => [
+        'errors' => [
           'participant' => 'not found'
         ]
       ], 401);
@@ -101,13 +101,13 @@ class TeacherController extends Controller
     if (empty($challenge_teacher)){ 
       return response()->json([
         'status' => 'fail',
-        'data' => [
+        'errors' => [
           'challenges' => 'doesnt belong to this teacher'
         ]
       ], 401);
     }
 
-    $participant->status = true;
+    $participant->status = !$participant->status;
     if($participant->save()) {
       return response()->json([
         'status' => 'success', 
@@ -118,7 +118,7 @@ class TeacherController extends Controller
     } else  {
       return response()->json([
         'status' => 'fail',
-        'data' => [
+        'errors' => [
           'messages' => 'confirm request error'
         ]
       ], 500);

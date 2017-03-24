@@ -21,7 +21,9 @@ class ChallengesController extends Controller
       if ($user->isStudent()){
         return response()->json([
           'status' => 'fail',
-          'errors' => 'unauthorized access'
+          'errors' => [
+            'messages'=> 'unauthorized access'
+          ]
         ], 401);
       }
       
@@ -33,6 +35,7 @@ class ChallengesController extends Controller
           'enroll_limit' => 'required|date',
           'tag' => 'required',
           'status' => 'boolean',
+          'picture' => 'file|required'
       ]);
       $status = true;
       if ($request->input('status')) {
@@ -45,6 +48,14 @@ class ChallengesController extends Controller
           'errors' => $v->errors()
         ], 422);
       }
+      $filename ="";
+      if ($request->hasFile('picture')){
+        $destination = storage_path('uploaded_subjects');
+        $file = $request->file('picture');
+        $file_extension = $file->extension();
+        $filename = str_random('12').".".$file_extension;
+        $file->move($destination, $filename);
+      }
 
       $challenges = new Challenge;
       $challenges->title = $request->input('title');
@@ -53,6 +64,9 @@ class ChallengesController extends Controller
       $challenges->description = $request->input('description');
       $challenges->enroll_limit_date = $request->input('enroll_limit');
       $challenges->tag = $request->input('tag');
+      if ($request->hasFile('picture')){
+        $challenges->picture = $filename;
+      }
       $challenges->status = $status;
       
       if ($challenges->save()) {
@@ -65,8 +79,12 @@ class ChallengesController extends Controller
           'user' => $challenges,
         ], 200);
       } else {
-        return response()->json(
-          ['error' => 'Unauthorized'], 401);
+        return response()->json([
+          'status' => 'fail',
+          'error' => [
+              'messages'=>  'unauthorized'
+            ]
+          ], 401);
       }
   }
 
@@ -104,7 +122,7 @@ class ChallengesController extends Controller
         return response()->json([
           'status' => 'fail',
           'errors' => [
-            'user_type' => 'must be student'
+            'messages' => ' user type must be student'
           ]
         ], 401);
       }
@@ -114,7 +132,7 @@ class ChallengesController extends Controller
         return response()->json([
           'status' => 'fail',
           'errors' => [
-            'challenges' => 'not found'
+            'messages' => 'challenges not found'
           ]
         ], 422);
       }
@@ -124,7 +142,7 @@ class ChallengesController extends Controller
         return response()->json([
           'status' => 'fail',
           'errors' => [
-            'join_challenge' => 'participant already registered',
+            'messages' => 'participant already registered',
             'status' => ($isRegistered->statuts==1 ? "accepted":"waiting confirmation")
           ]
         ], 422);

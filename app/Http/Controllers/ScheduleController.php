@@ -13,7 +13,7 @@ use Validator;
 class ScheduleController extends Controller
 {
   public function __construct() {
-    $this->middleware('auth', ['only' => ['create']]);
+    $this->middleware('auth', ['only' => ['create', 'get']]);
   }
 
   public function create(Request $request){
@@ -21,7 +21,9 @@ class ScheduleController extends Controller
     if ($current_user->isStudent()){
       return response()->json([
         'status' => 'fail',
-        'errors' => 'unauthorized access'
+        'errors' => [
+          'messages'=>'unauthorized access'
+        ]
       ], 401);
     }
     
@@ -44,7 +46,7 @@ class ScheduleController extends Controller
       return response()->json([
         'status'=> 'fail',
         'errors'=> [
-          'challenge'=> 'challenge not found'
+          'messages'=> 'challenge not found'
         ]
       ]);
     }
@@ -75,7 +77,9 @@ class ScheduleController extends Controller
     }
     return response()->json([
         'status' => 'fail',
-        'errors' => $schedule->errors()
+        'errors' => [
+          'messages' => 'An error occured, please try again'
+        ]
       ], 422);
   }
 
@@ -87,7 +91,7 @@ class ScheduleController extends Controller
       return response()->json([
         'status'=> 'fail',
         'errors'=> [
-          'challenge'=> 'challenge not found'
+          'messages'=> 'challenge not found'
         ]
       ]);
     }
@@ -95,7 +99,7 @@ class ScheduleController extends Controller
     if (empty($participant) && $current_user->isStudent() ) {
       return response()->json([
         'status' => 'fail',
-        'data' => [
+        'errors' => [
           'messages' => 'unauthorized access'
         ]
       ], 401);

@@ -44,7 +44,7 @@ class UserController extends Controller
         return response()->json([
           'status' => 'fail',
           'errors' => [
-            'role' => 'role does not exist'
+            'messages' => 'role does not exist'
           ]
         ], 422);  
       }
@@ -54,11 +54,17 @@ class UserController extends Controller
       if ($user->save()) {
         return response()->json([
           'status' => 'success',
-          'user' => $user
+          'data' => [
+            'user' => $user
+          ]
         ], 200);
       } else {
-        return response()->json(
-          ['error' => 'Unauthorized'], 401);
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+            'messages' => 'Unauthorized'
+          ]
+        ], 401);
       }
   }
 }

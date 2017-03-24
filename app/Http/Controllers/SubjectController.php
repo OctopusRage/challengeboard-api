@@ -18,7 +18,9 @@ class SubjectController extends Controller
     if ($current_user->isStudent()){
       return response()->json([
         'status' => 'fail',
-        'errors' => 'unauthorized access'
+        'errors' => [
+          'messages' => 'unauthorized access'
+        ]
       ], 401);
     }
     
@@ -58,12 +60,14 @@ class SubjectController extends Controller
     }
     return response()->json([
         'status' => 'fail',
-        'errors' => $subject->errors()
+        'errors' => [
+          'messages'=> 'An error occured please try again'
+        ]
       ], 422);
   }
   public function get($id){
     $current_user = Auth::user();
-    $subject = Subject::where('challenge_id', '=', $id)->get();   
+    $subject = Subject::where('challenge_id', '=', $id)->get();
     return response()->json([
       'status' => 'success',
       'data' => [
