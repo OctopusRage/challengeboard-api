@@ -31,7 +31,7 @@ class ChallengesController extends Controller
           'prize' => 'numeric',
           'description' => 'required|min:10',
           'enroll_limit' => 'required|date',
-          'tag' => 'required'
+          'tag' => 'required',
           'status' => 'boolean',
       ]);
       $status = true;
