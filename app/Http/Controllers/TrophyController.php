@@ -105,12 +105,13 @@ class TrophyController extends Controller
 
   public function get(){
     $current_user = Auth::user();
-    $trophy = Trophy::all();
+    $trophies = Trophy::select('trophies.*', 'challenges.title', 'challenges.tag')
+    ->join('challenges', 'trophies.challenge_id', '=', 'challenges.id')->orderBy('trophies.created_at', 'desc')->get();
     
     return response()->json([
       'status' => 'success',
       'data' => [
-        'trophies'=> $trophy
+        'trophies'=> $trophies
       ]
     ], 200);
   }
