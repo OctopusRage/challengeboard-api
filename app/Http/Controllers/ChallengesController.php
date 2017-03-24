@@ -31,6 +31,7 @@ class ChallengesController extends Controller
           'prize' => 'numeric',
           'description' => 'required|min:10',
           'enroll_limit' => 'required|date',
+          'tag' => 'required'
           'status' => 'boolean',
       ]);
       $status = true;
@@ -51,6 +52,7 @@ class ChallengesController extends Controller
       $challenges->prize = $request->input('prize');
       $challenges->description = $request->input('description');
       $challenges->enroll_limit_date = $request->input('enroll_limit');
+      $challenges->tag = $request->input('tag');
       $challenges->status = $status;
       
       if ($challenges->save()) {
