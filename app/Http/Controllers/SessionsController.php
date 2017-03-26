@@ -38,7 +38,11 @@ class SessionsController extends Controller
           ]
         ], 422);
       }
-      $user = $user->join('roles','users.role_id', '=', 'roles.id')->select('users.id', 'nim', 'auth_token', 'name', 'roles.role')->first();
+      $user = User::select('users.id', 'nim', 'auth_token', 'name', 'roles.role')
+      ->join('roles', 'users.role_id', '=', 'roles.id')
+      ->where('users.nim', '=', $request->input('nim'))
+      ->first();
+      
       return response()->json([ 
         'status' => 'success', 
         'data' => [

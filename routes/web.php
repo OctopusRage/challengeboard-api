@@ -32,7 +32,9 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
     });
     $app->group(['prefix' => 'schedules'], function () use ($app) {
        $app->post('/', 'ScheduleController@create');
-       $app->get('/{id}', 'ScheduleController@get');
+       $app->get('challenge/{id}', 'ScheduleController@get');
+       $app->get('/teacher', 'ScheduleController@teacher_schedule');
+       $app->get('/student', 'ScheduleController@student_schedule');
     });
     $app->group(['prefix' => 'trophies'], function () use ($app) {
        $app->post('/', 'TrophyController@create');
