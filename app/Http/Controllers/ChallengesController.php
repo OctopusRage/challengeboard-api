@@ -35,7 +35,8 @@ class ChallengesController extends Controller
           'enroll_limit' => 'required|date',
           'tag' => 'required',
           'status' => 'boolean',
-          'picture' => 'file|required'
+          'picture' => 'file|required',
+          'room_id' => 'unique:challenges|required'
       ]);
       $status = true;
       if ($request->input('status')) {
@@ -64,6 +65,7 @@ class ChallengesController extends Controller
       $challenges->description = $request->input('description');
       $challenges->enroll_limit_date = $request->input('enroll_limit');
       $challenges->tag = $request->input('tag');
+      $challenges->room_id = $request->input('room_id');
       if ($request->hasFile('picture')){
         $challenges->picture = $filename;
       }

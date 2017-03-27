@@ -35,7 +35,7 @@ class TeacherController extends Controller
       ->where('challenges_teachers.user_id', '=', $current_user->id)
       ->where('challenges_participants.status', '=', false)
       ->select('challenges_participants.id', 'users.id as user_id', 'users.name', 'challenges_participants.status',
-        'challenges.id as challenge_id', 'challenges.title'
+        'challenges.id as challenge_id', 'challenges.room_id', 'challenges.title'
       )
       ->get();
     return response()->json([
