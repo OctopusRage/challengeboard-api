@@ -35,7 +35,7 @@ class ChallengesController extends Controller
           'enroll_limit' => 'required|date',
           'tag' => 'required',
           'status' => 'boolean',
-          'picture' => 'file|required',
+          'picture' => 'file',
           'room_id' => 'unique:challenges|required'
       ]);
       $status = true;
