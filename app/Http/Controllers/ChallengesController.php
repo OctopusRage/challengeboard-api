@@ -88,6 +88,34 @@ class ChallengesController extends Controller
       }
   }
 
+  public function mine(Request $request) {
+      $user = Auth::user();
+      $v = Validator::make($request->all(), [
+          'limit' => 'integer',
+      ]);
+
+      if ($v->fails()){
+        return response()->json([
+          'status' => 'fail',
+          'errors' => $v->errors()
+        ], 422);
+      }
+      $limit = $request->input('limit') ?: 20 ;
+      $challenges = Challenge::join('challenges_teachers', 'challenges.id', '=', 'challenges_teachers.challenge_id')
+        ->groupBy('challenges.id')
+        ->select('challenges.*')
+        ->paginate($limit);
+
+      return response()->json([
+        'status' => 'success',
+        'data' => [
+          'challenges' => $challenges->toArray()['data'],
+          'total' => $challenges->count(),
+          'current_page'=> $challenges->currentPage(),
+        ]
+      ], 200);
+  }
+
   public function index(Request $request) {
       $user = Auth::user();
       $v = Validator::make($request->all(), [
@@ -115,6 +143,8 @@ class ChallengesController extends Controller
         ]
       ], 200);
   }
+
+  
 
   public function join($id) {
       $user = Auth::user();
