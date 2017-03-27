@@ -21,7 +21,7 @@ class SessionsController extends Controller
         ], 422);
       }
 
-      $user = User::where('nim', '=', $request->nim)->first();
+      $user = User::where('email', '=', $request->nim)->first();
       if(empty($user)) {
         return response()->json([
           'status' => 'fail',
@@ -38,9 +38,9 @@ class SessionsController extends Controller
           ]
         ], 422);
       }
-      $user = User::select('users.id', 'nim', 'auth_token', 'name', 'roles.role')
+      $user = User::select('users.id', 'nim', 'auth_token', 'name', 'email','roles.role')
       ->join('roles', 'users.role_id', '=', 'roles.id')
-      ->where('users.nim', '=', $request->input('nim'))
+      ->where('users.email', '=', $request->input('nim'))
       ->first();
       
       return response()->json([ 

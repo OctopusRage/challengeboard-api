@@ -18,6 +18,7 @@ class UserController extends Controller
           'password' => 'required',
           'password_confirmation' => 'same:password',
           'nim' => 'required|unique:users|min:6',
+          'email'=> 'required|unique:users|min:6|email',
           'type' => 'required'
       ]);
 
@@ -33,6 +34,7 @@ class UserController extends Controller
       $user->name = $request->input('name');
       $user->encrypted_password = Hash::make($request->input('password'));
       $user->auth_token = str_random(20);
+      $user->email = $request->input('email');
       $role = null;
       if ($request->input('type') == self::USER_TYPE_TEACHER) {
         $role = Role::where('role', '=', 'teacher')->first();
