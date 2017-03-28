@@ -14,7 +14,7 @@ class UserController extends Controller
 
   public function create(Request $request) {
       $v = Validator::make($request->all(), [
-          'name' => 'required|min:6|max:255',
+          'name' => 'required|min:3|max:255',
           'password' => 'required',
           'password_confirmation' => 'same:password',
           'nim' => 'required|min:6',
@@ -43,7 +43,7 @@ class UserController extends Controller
         ], 422);
       }
       $user = new User;
-      $user->nim = $request-> input('nim');
+      $user->nim = $request->input('nim');
       $user->name = $request->input('name');
       $user->encrypted_password = Hash::make($request->input('password'));
       $user->auth_token = str_random(20);
@@ -73,13 +73,14 @@ class UserController extends Controller
             'user' => $user
           ]
         ], 200);
-      } else {
-        return response()->json([
-          'status' => 'fail',
-          'errors' => [
-            'messages' => 'Unauthorized'
-          ]
-        ], 401);
-      }
+      } 
+
+      return response()->json([
+        'status' => 'fail',
+        'errors' => [
+          'messages' => 'Unauthorized'
+        ]
+      ], 401);
+      
   }
 }

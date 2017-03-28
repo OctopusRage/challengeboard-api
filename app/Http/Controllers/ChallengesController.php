@@ -13,7 +13,7 @@ use Validator;
 class ChallengesController extends Controller
 {
   public function __construct() {
-    $this->middleware('auth', ['only' => ['create', 'join']]);
+    $this->middleware('auth', ['only' => ['create', 'join','mine']]);
   }
 
   public function create(Request $request) {
@@ -112,6 +112,7 @@ class ChallengesController extends Controller
       }
       $limit = $request->input('limit') ?: 20 ;
       $challenges = Challenge::join('challenges_teachers', 'challenges.id', '=', 'challenges_teachers.challenge_id')
+        ->where('challenges_teachers.user_id','=',$user->id)
         ->groupBy('challenges.id')
         ->select('challenges.*')
         ->paginate($limit);

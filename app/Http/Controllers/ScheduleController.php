@@ -31,7 +31,6 @@ class ScheduleController extends Controller
         'event_time' => 'date_format:H:i|required',
         'event_date' => 'date|required',
         'challenge_id' => 'required',
-        'places' => 'required',
         'is_online' => 'boolean',
     ]);
 

@@ -28,6 +28,7 @@ class StudentController extends Controller
     $challenges = User::join('challenges_participants', 'challenges_participants.user_id','=', 'users.id')
       ->join('challenges', 'challenges_participants.challenge_id', '=', 'challenges.id')
       ->where('challenges_participants.status','=', 1)
+      ->where('users.id','=', $current_user->id)
       ->select('challenges.*')
       ->get();
     
