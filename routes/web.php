@@ -42,6 +42,11 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
     });
 });
 
+
+$app->group(['prefix' => 'student'], function () use ($app) {
+    $app->get('challenges', 'StudentController@challenges');
+});
+
 $app->group(['prefix' => 'challenges'], function () use ($app) {
     $app->get('/', 'ChallengesController@index');
     $app->post('/join/{id}', 'ChallengesController@join');

@@ -13,7 +13,7 @@ class Challenge extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'prize', 'event_date', 'enroll_limit_date', 'picture', 'prize', 'description', 'status'
+        'title', 'prize', 'event_date', 'enroll_limit_date', 'picture', 'prize', 'description', 'status', 'room_id'
     ];
 
     public function participants(){

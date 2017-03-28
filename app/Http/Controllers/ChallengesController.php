@@ -36,7 +36,6 @@ class ChallengesController extends Controller
           'tag' => 'required',
           'status' => 'boolean',
           'picture' => 'file',
-          'room_id' => 'unique:challenges|required'
       ]);
       $status = true;
       if ($request->input('status')) {
@@ -50,6 +49,15 @@ class ChallengesController extends Controller
         ], 422);
       }
       $filename ="";
+      $checkRoom = Challenge::where('room_id', $request->input('room_id'))->first();
+      if (!empty($checkRoom)) {
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+            'messages' => 'room_id has been taken'
+          ]
+        ], 422);
+      }
       if ($request->hasFile('picture')){
         $destination = storage_path('uploaded_subjects');
         $file = $request->file('picture');

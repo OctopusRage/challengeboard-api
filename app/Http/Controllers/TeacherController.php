@@ -8,6 +8,7 @@ use App\Models\ChallengesTeacher;
 use App\Models\ChallengesParticipant;
 use Illuminate\Support\Facades\Hash;
 use Validator;
+use App\User;
 
 class TeacherController extends Controller
 {
@@ -107,12 +108,29 @@ class TeacherController extends Controller
       ], 401);
     }
 
-    $participant->status = !$participant->status;
+
+
+    $participant->status = 1;
     if($participant->save()) {
+      $user = User::find($participant->user_id);
+      $challenge = Challenge::find($participant->challenge_id);
+      $room_id = $challenge->room_id;
+      $uri = "http://dragongo.qiscus.com/api/v2/rest/add_room_participants";
+      $email = $user->email;
+      $response = \Httpful\Request::post($uri)
+                      ->authenticateWith('username', 'password')  // authenticate with basic auth...
+                      ->body('emails[]='.$email.'&room_id='.$room_id)
+                      ->withoutStrictSsl()
+                      ->expectsJson()
+                      ->addHeaders([
+                          'QISCUS_SDK_SECRET'=> 'dragongo-123',
+                          'Content-Type' => 'application/x-www-form-urlencoded'
+                        ])
+                      ->send();
       return response()->json([
         'status' => 'success', 
         'data' => [
-          'participant' => $participant
+          'participant' => $participant,
         ]
       ]);
     } else  {

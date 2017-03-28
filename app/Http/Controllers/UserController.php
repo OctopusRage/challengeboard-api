@@ -17,8 +17,8 @@ class UserController extends Controller
           'name' => 'required|min:6|max:255',
           'password' => 'required',
           'password_confirmation' => 'same:password',
-          'nim' => 'required|unique:users|min:6',
-          'email'=> 'required|unique:users|min:6|email',
+          'nim' => 'required|min:6',
+          'email'=> 'required|min:6|email',
           'type' => 'required'
       ]);
 
@@ -28,7 +28,20 @@ class UserController extends Controller
           'errors' => $v->errors()
         ], 422);
       }
-
+      $tmp_user = User::where('nim', '=', $request->input('nim'))->first();
+      if(!empty($tmp_user)) {
+        return response()->json([
+          'status' => 'fail',
+          'errors' => ['messages' => 'nim already been taken']
+        ], 422);
+      }
+      $tmp_user = User::where('email', '=',$request->input('email'))->first();
+      if(!empty($tmp_user)) {
+        return response()->json([
+          'status' => 'fail',
+          'errors' => ['messages' => 'email already been taken']
+        ], 422);
+      }
       $user = new User;
       $user->nim = $request-> input('nim');
       $user->name = $request->input('name');
