@@ -126,7 +126,7 @@ class ScheduleController extends Controller
       ->join('users', 'challenges_participants.user_id', '=', 'users.id')
       ->where('challenges_participants.user_id','=',$current_user->id)
       ->orderBy('schedules.event_date', 'desc')
-      ->select('schedules.*', 'users.name', 'challenges.title as challenge_title')
+      ->select('schedules.*', 'users.name', 'challenges.title as challenge_title' , 'room_id')
       ->get();
     return response()->json([
       'status' => 'success',

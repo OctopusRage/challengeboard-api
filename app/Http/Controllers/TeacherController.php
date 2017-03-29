@@ -16,7 +16,7 @@ class TeacherController extends Controller
     $this->middleware('auth', ['only' => ['pending_request','approve_request']]);
   }
 
-  public function pending_request() {
+  public function pending_request(Request $request) {
     $challenge = Challenge::all();
     $current_user = Auth::user();
     if($current_user->isStudent()) {
@@ -27,7 +27,16 @@ class TeacherController extends Controller
         ]
       ], 401);
     }
-
+    $v = Validator::make($request->all(), [
+          'status' => 'boolean',
+    ]);
+    if ($v->fails()){
+      return response()->json([
+        'status' => 'fail',
+        'errors' => $v->errors()
+      ], 422);
+    }
+    $participant_status = $request->input('status') ?: false;
     $pending_request = Challenge::join('challenges_participants', 'challenges_participants.challenge_id', '=', 'challenges.id')
       ->join('challenges_teachers', 'challenges_teachers.challenge_id', '=', 'challenges.id' )
       ->join('users', 'challenges_participants.user_id', '=', 'users.id')

@@ -28,7 +28,7 @@ class SessionsController extends Controller
           'errors' => [
             'messages' => 'user not found'
           ]
-        ]);
+        ],422);
       }
       if (!Hash::check($request->password, $user->encrypted_password)) {
         return response()->json([
