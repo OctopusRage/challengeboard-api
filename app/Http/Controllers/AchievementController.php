@@ -61,7 +61,7 @@ class AchievementController extends Controller
         'errors'=> [
           'messages'=> 'aleady registered'
         ]
-      ]);
+      ],422);
     }
     $achievement = new Achievement;
     $achievement->user_id = $request->input('user_id');

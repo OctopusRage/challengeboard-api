@@ -125,6 +125,7 @@ class ScheduleController extends Controller
       ->join('challenges_participants', 'challenges_participants.challenge_id', '=', 'challenges.id')
       ->join('users', 'challenges_participants.user_id', '=', 'users.id')
       ->where('challenges_participants.user_id','=',$current_user->id)
+      ->where('challenges_participants.status','=',1)
       ->orderBy('schedules.event_date', 'desc')
       ->select('schedules.*', 'users.name', 'challenges.title as challenge_title' , 'room_id')
       ->get();
