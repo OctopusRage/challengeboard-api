@@ -136,7 +136,7 @@ class ScheduleController extends Controller
     ], 200);
   }
 
-    public function teacher_schedule(Request $request){
+  public function teacher_schedule(Request $request){
     $current_user = Auth::user();
     if ($current_user->isStudent()) {
       return response()->json([
@@ -151,7 +151,7 @@ class ScheduleController extends Controller
       ->join('users', 'challenges_teachers.user_id', '=', 'users.id')
       ->where('challenges_teachers.user_id','=',$current_user->id)
       ->orderBy('schedules.event_date', 'desc')
-      ->select('schedules.*', 'users.name', 'challenges.title as challenge_title')
+      ->select('schedules.*', 'users.name', 'challenges.title as challenge_title', 'room_id')
       ->get();
     return response()->json([
       'status' => 'success',

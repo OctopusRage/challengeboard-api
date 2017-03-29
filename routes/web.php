@@ -31,6 +31,9 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
        $app->post('/', 'SubjectController@create');
        $app->get('/{id}', 'SubjectController@get');
     });
+    $app->group(['prefix' => 'achievements'], function () use ($app) {
+       $app->post('/', 'AchievementController@create');
+    });
     $app->group(['prefix' => 'schedules'], function () use ($app) {
        $app->post('/', 'ScheduleController@create');
        $app->get('challenge/{id}', 'ScheduleController@get');
@@ -58,3 +61,4 @@ $app->group(['prefix' => 'trophies'], function () use ($app) {
 });
 
 $app->post('/login', 'SessionsController@create');
+$app->get('/achievements/{id}', 'AchievementController@index');

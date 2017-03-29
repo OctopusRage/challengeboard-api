@@ -43,7 +43,7 @@ class TeacherController extends Controller
       ->join('roles', 'users.role_id', '=', 'roles.id')
       ->where('roles.role', '=', 'student')
       ->where('challenges_teachers.user_id', '=', $current_user->id)
-      ->where('challenges_participants.status', '=', false)
+      ->where('challenges_participants.status', '=', $participant_status)
       ->select('challenges_participants.id', 'users.id as user_id', 'users.name', 'challenges_participants.status',
         'challenges.id as challenge_id', 'challenges.room_id', 'challenges.title'
       )
