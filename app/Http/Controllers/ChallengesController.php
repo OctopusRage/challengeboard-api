@@ -13,7 +13,7 @@ use Validator;
 class ChallengesController extends Controller
 {
   public function __construct() {
-    $this->middleware('auth', ['only' => ['create', 'join','mine']]);
+    $this->middleware('auth', ['only' => ['create', 'join','mine', 'participants_by_id']]);
   }
 
   public function create(Request $request) {
@@ -154,6 +154,32 @@ class ChallengesController extends Controller
         ]
       ], 200);
   }
+  
+  public function participants_by_id($id) {
+      $user = Auth::user();
+      $current_user = Auth::user();
+      if ($current_user->isStudent()){
+        return response()->json([
+          'status' => 'fail',
+          'errors' => [
+            'messages' => 'unauthorized access'
+          ]
+        ], 401);
+      }
+
+      $challenges = Challenge::find($id)
+        ->join('challenges_participants', 'challenges_participants.challenge_id', 'challenges.id')
+        ->join('users', 'challenges_participants.user_id', 'users.id')
+        ->select('users.*')
+        ->get();
+
+      return response()->json([
+        'status' => 'success',
+        'data' => [
+          'participants' => $challenges
+        ]
+      ], 200);
+  }
 
   
 
@@ -184,7 +210,7 @@ class ChallengesController extends Controller
           'status' => 'fail',
           'errors' => [
             'messages' => 'participant already registered',
-            'status' => ($isRegistered->statuts==1 ? "accepted":"waiting confirmation")
+            'status' => ($isRegistered->status==1 ? "accepted":"waiting confirmation")
           ]
         ], 422);
       }

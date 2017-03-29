@@ -13,7 +13,7 @@ use Validator;
 class TrophyController extends Controller
 {
   public function __construct() {
-    $this->middleware('auth', ['only' => ['create']]);
+    $this->middleware('auth', ['only' => ['create', 'get_user_trophies']]);
   }
 
   public function create(Request $request){
@@ -103,6 +103,28 @@ class TrophyController extends Controller
       'status' => 'success',
       'data' => [
         'trophies'=> $trophy
+      ]
+    ], 200);
+  }
+
+  public function get_user_trophies(){
+    $current_user = Auth::user();
+    if(!$current_user->isStudent()) {
+      return response()->json([
+        'status' => 'fail',
+        'errors'=> [
+          'messages' => 'Must be student'
+        ]
+      ], 401);
+    }
+    $trophies = Trophy::join('achievements', 'achievements.user_id', 'trophies.id')
+      ->join('challenges', 'challenges.id', 'trophies.challenge_id')
+      ->where('achievements.user_id', $current_user->id)
+      ->select('trophies.*', 'tag', 'title')->get();
+    return response()->json([
+      'status' => 'success',
+      'data' => [
+        'trophies'=> $trophies
       ]
     ], 200);
   }

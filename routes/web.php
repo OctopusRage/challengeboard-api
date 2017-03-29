@@ -22,6 +22,7 @@ $app->group(['prefix'=>'users'], function () use ($app) {
 $app->group(['prefix' => 'admin'], function () use ($app) {
     $app->group(['prefix' => 'challenges'], function () use ($app) {
        $app->post('/', 'ChallengesController@create');
+       $app->get('/participants/{id}', 'ChallengesController@participants_by_id');
        $app->get('/', 'ChallengesController@mine');
        $app->get('/pending_request', 'TeacherController@pending_request');
        $app->get('/pending_request/{id}', 'TeacherController@pending_request_by_id');
@@ -48,6 +49,7 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
 
 $app->group(['prefix' => 'student'], function () use ($app) {
     $app->get('challenges', 'StudentController@challenges');
+    $app->get('trophies', 'TrophyController@get_user_trophies');
 });
 
 $app->group(['prefix' => 'challenges'], function () use ($app) {
