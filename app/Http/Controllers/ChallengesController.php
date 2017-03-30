@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Challenge;
+use App\User;
 use App\Models\ChallengesParticipant;
 use App\Models\ChallengesTeacher;
 use Illuminate\Support\Facades\Hash;
@@ -235,6 +236,23 @@ class ChallengesController extends Controller
         ], 500);
       }
       
+  }
+
+  public function student_challenges_by_id($id) {
+    $current_user = User::find($id);
+    $challenges = User::join('challenges_participants', 'challenges_participants.user_id','=', 'users.id')
+      ->join('challenges', 'challenges_participants.challenge_id', '=', 'challenges.id')
+      ->where('challenges_participants.status','=', 1)
+      ->where('users.id','=', $current_user->id)
+      ->select('challenges.*')
+      ->get();
+    
+    return response()->json([
+      'status' => 'success', 
+      'data' => [
+        'challenges' => $challenges
+      ]
+    ]);
   }
 
 }

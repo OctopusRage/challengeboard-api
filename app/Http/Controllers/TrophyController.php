@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Challenge;
+use App\User;
 use App\Models\ChallengesTeacher;
 use App\Models\ChallengesParticipant;
 use App\Models\Trophy;
@@ -87,6 +88,34 @@ class TrophyController extends Controller
       ], 500);
   }
 
+  public function get_trophy_stats_by_id($id) {
+    $trophy_gold_count = User::join('achievements', 'achievements.user_id', 'users.id')
+      ->join('trophies', 'trophies.id', 'achievements.trophy_id')
+      ->where('users.id', '=', $id)
+      ->where('trophies.rank','=',1)
+      ->count();
+    $trophy_silver_count = User::join('achievements', 'achievements.user_id', 'users.id')
+      ->join('trophies', 'trophies.id', 'achievements.trophy_id')
+      ->where('users.id', '=', $id)
+      ->where('trophies.rank','=',2)
+      ->count();
+    $trophy_bronze_count = User::join('achievements', 'achievements.user_id', 'users.id')
+      ->join('trophies', 'trophies.id', 'achievements.trophy_id')
+      ->where('users.id', '=', $id)
+      ->where('trophies.rank','=',3)
+      ->count();
+    return response()->json([
+      'status'=>'success',
+      'data' => [
+        'user' => User::find($id),
+        'gold_count' => $trophy_gold_count,
+        'silver_count' => $trophy_silver_count,
+        'bronze_count' => $trophy_bronze_count,
+      ]
+    ], 200);
+    
+  }
+
   public function get_by_id($id){
     $current_user = Auth::user();
     $challenge = Challenge::find($id);
@@ -117,6 +146,20 @@ class TrophyController extends Controller
         ]
       ], 401);
     }
+    $trophies = Trophy::join('achievements', 'achievements.user_id', 'trophies.id')
+      ->join('challenges', 'challenges.id', 'trophies.challenge_id')
+      ->where('achievements.user_id', $current_user->id)
+      ->select('trophies.*', 'tag', 'title')->get();
+    return response()->json([
+      'status' => 'success',
+      'data' => [
+        'trophies'=> $trophies
+      ]
+    ], 200);
+  }
+
+  public function get_user_trophies_by_student_id($id){
+    $current_user = User::find($id);
     $trophies = Trophy::join('achievements', 'achievements.user_id', 'trophies.id')
       ->join('challenges', 'challenges.id', 'trophies.challenge_id')
       ->where('achievements.user_id', $current_user->id)

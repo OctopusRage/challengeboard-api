@@ -49,7 +49,9 @@ $app->group(['prefix' => 'admin'], function () use ($app) {
 
 $app->group(['prefix' => 'student'], function () use ($app) {
     $app->get('challenges', 'StudentController@challenges');
+    $app->get('challenges_by_id/{id}', 'ChallengesController@student_challenges_by_id');
     $app->get('trophies', 'TrophyController@get_user_trophies');
+    $app->get('trophies_by_id/{id}', 'TrophyController@get_user_trophies_by_student_id');
 });
 
 $app->group(['prefix' => 'challenges'], function () use ($app) {
@@ -60,6 +62,7 @@ $app->group(['prefix' => 'challenges'], function () use ($app) {
 $app->group(['prefix' => 'trophies'], function () use ($app) {
     $app->get('/', 'TrophyController@get');
     $app->get('/{id}', 'TrophyController@get_by_id');
+    $app->get('medal_stats/{id}', 'TrophyController@get_trophy_stats_by_id');
 });
 
 $app->post('/login', 'SessionsController@create');
